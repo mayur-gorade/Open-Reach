@@ -6,8 +6,13 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+
+    const navigate = useNavigate();
+
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -38,7 +43,7 @@ export default function Navbar() {
           />
 
           <Typography
-            variant="h6"   
+            variant="h6"
             sx={{
               fontWeight: "550",
             }}
@@ -122,8 +127,13 @@ export default function Navbar() {
             marginLeft: "auto",
             marginRight: 3,
           }}
+
         >
-          <Button sx={{ color: "#0B1F2A" }}>
+          <Button sx={{ color: "#0B1F2A" ,
+              textTransform: "none",
+             }}
+            onClick={() => navigate("/login")}
+          >
             Log In
           </Button>
 
@@ -136,6 +146,8 @@ export default function Navbar() {
                 backgroundColor: "#087F8C",
               },
             }}
+
+            onClick={() => navigate("/register")}
           >
             Sign Up
           </Button>
@@ -171,7 +183,7 @@ export default function Navbar() {
             flexDirection: "column",
             alignItems: "flex-start",
             padding: 2,
-            
+
           }}
         >
           <Button
@@ -228,6 +240,36 @@ export default function Navbar() {
           >
             Blog
           </Button>
+
+
+
+           {/* Mobile Login */}
+              <Button
+                sx={{
+                  color: "#0B1F2A",
+                  textTransform: "none",
+                }}
+             onClick={() => navigate("/login")}
+              >
+                Log In
+              </Button>
+
+              {/* Mobile Signup */}
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#00AFC1",
+                  borderRadius: "15px",
+                  textTransform: "none",
+                  marginTop: 1,
+                  "&:hover": {
+                    backgroundColor: "#087F8C",
+                  },
+                }}
+                onClick={() => navigate("/register")}
+              >
+                Sign Up
+              </Button>
         </Box>
       )}
 

@@ -64,7 +64,7 @@ export default function Navbar() {
         >
           <Button
             component="a"
-            href="/find-work"
+            onClick={()=>navigate("/find-work")}
             sx={{
               color: "#0B1F2A",
               textTransform: "none",

@@ -3,7 +3,12 @@ import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from "@mui/material/Typography";
+import {Radio,
+        RadioGroup,
+        FormControlLabel} from "@mui/material";
+
 import axios from "axios";
+
 
 export default function Register(){
 
@@ -13,13 +18,15 @@ export default function Register(){
     const [email,setEmail]=useState("");
     const [password , setPassword]= useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [role , setRole]=useState("");
     const [message , setMessage]=useState("")
 
     const handleRegister = async () => {
          const userData = {
                  name: name,
                  email: email,
-                 password: password
+                 password: password,
+                 role:role
              };
 
             try {
@@ -116,6 +123,28 @@ export default function Register(){
                               onChange={(e) => setConfirmPassword(e.target.value)}
                               sx={{ marginBottom: 2 }}
                                />
+
+
+                         <Typography sx={{marginBottom:1,fontWeight:500}}>Choose your role :</Typography>
+
+                         <RadioGroup
+                                value={role}
+                                onChange={(e)=>setRole(e.target.value)}
+                         >
+                         <FormControlLabel
+                             value="STUDENT"
+                             control={<Radio/>}
+                             label="student"
+                         />
+
+                          <FormControlLabel
+                              value="CLIENT"
+                              control={<Radio/>}
+                              label="client"
+                             />
+
+
+                         </RadioGroup>
 
                            <Button
                                fullWidth

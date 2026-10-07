@@ -11,12 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/jobs")
+@CrossOrigin(origins = "http://localhost:5173")
 public class jobController {
 
     @Autowired
     private jobService jobservice ;
 
-    @GetMapping
+    @GetMapping("/findjob")
     public List<JobPost> getAllJobs(){
         return jobservice.getAllJobs();
     }

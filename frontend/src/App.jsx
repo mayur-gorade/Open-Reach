@@ -5,6 +5,7 @@ import Register from './Pages/Register'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './Pages/Login'
 import FindWork from './Pages/FindWork'
+import JobDetails from './Pages/JobDetails'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="/register"  element={<Register/>}/>
             <Route path="/login" element={<Login />} />
             <Route path ="/find-work" element={<FindWork/>}/>
+            <Route path="/job/:id"  element={<JobDetails/>}/>
         </Routes>
     </BrowserRouter>
   )

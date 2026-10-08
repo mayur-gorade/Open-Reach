@@ -1,4 +1,4 @@
-
+import { useParams ,useNavigate} from "react-router-dom";
 import {useEffect , useState } from "react";
 import axios from "axios";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 
 export default function FindWork(){
+    const navigate = useNavigate();
     const [jobs , setJobs]= useState([]);
     useEffect(() => {
             axios.get("http://localhost:8080/jobs/findjob")
@@ -69,7 +70,9 @@ export default function FindWork(){
 
 
 
-                        <Button variant="contained" sx={{marginTop:2}}>
+                        <Button
+                        onClick={()=>navigate(`/job/${job.id}`)}
+                        variant="contained" sx={{marginTop:2}}>
                             View Job
                           </Button>
 

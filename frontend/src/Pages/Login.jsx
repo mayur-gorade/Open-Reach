@@ -16,8 +16,8 @@ export default function Login() {
     const [password, setPassword] = useState("");
      const [message , setMessage]=useState("")
 
-  const handleLogin=async ()=>{
-
+  const handleLogin=async (e)=>{
+       e.preventDefault();
     const loginData = {
         email: email,
         password: password
@@ -58,12 +58,15 @@ export default function Login() {
         >
 
             <Box
+                component="form"
+                onSubmit={handleLogin}
                 sx={{
                     width: "100%",
                     maxWidth: "400px",
                     backgroundColor: "#FFFFFF",
                     padding: 4,
-                    borderRadius: 3
+                    borderRadius: 3,
+
                 }}
             >
 
@@ -97,6 +100,7 @@ export default function Login() {
 
                 <Button
                     fullWidth
+                    type="submit"
                     variant="contained"
                     sx={{
                         marginTop: 3,
@@ -105,8 +109,6 @@ export default function Login() {
                             backgroundColor: "#087F8C"
                         }
                     }}
-
-                 onClick={handleLogin}
                 >
                     Login
                 </Button>

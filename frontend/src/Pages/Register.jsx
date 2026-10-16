@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import {Radio,
         RadioGroup,
         FormControlLabel} from "@mui/material";
+import {useNavigate} from "react-router-dom"
 
 import axios from "axios";
 
@@ -21,7 +22,10 @@ export default function Register(){
     const [role , setRole]=useState("");
     const [message , setMessage]=useState("")
 
-    const handleRegister = async () => {
+    const navigate = useNavigate();
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
          const userData = {
                  name: name,
                  email: email,
@@ -37,6 +41,12 @@ export default function Register(){
                    );
 
                     setMessage(response.data);
+
+                    if (role === "STUDENT") {
+                      navigate("/api/student-profiles");
+                    } else if (role === "CLIENT") {
+                      navigate("/client-profiles");
+                    }
 
                } catch (error) {
 
@@ -61,7 +71,9 @@ export default function Register(){
           >
 
            <Box
-            sx={{
+              component="form"
+              onSubmit={handleRegister}
+              sx={{
                 width: "100%",
                 maxWidth: "450px",
                 backgroundColor: "#FFFFFF",
@@ -147,10 +159,11 @@ export default function Register(){
                          </RadioGroup>
 
                            <Button
+                               type="sumbit"
                                fullWidth
                                variant="contained"
                                size="large"
-                               onClick={handleRegister}
+
                                  >
                                    REGISTER
                             </Button>

@@ -1,9 +1,5 @@
 package com.openreachbackend.Model;
 
-
-import jakarta.persistence.Entity;
-
-
 public class LoginRequest {
     private String email;
     private String password;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,7 @@ public class userService {
     }
 
 
-    public ResponseEntity<String> loginUser(LoginRequest loginReq) {
+    public ResponseEntity<?> loginUser(LoginRequest loginReq) {
         Optional<User> user = userRepo.findByEmail(loginReq.getEmail());
         if(user.isEmpty()){
             return ResponseEntity.status(404).body("Email not registered");
@@ -39,6 +40,13 @@ public class userService {
         if(!user.get().getPassword().equals(loginReq.getPassword())){
             return ResponseEntity.status(401).body("Invalid password");
         }
-        return ResponseEntity.ok("Login successful");
+        return ResponseEntity.ok(
+                Map.of(
+                        "message","login successfull",
+                        "userId",user.get().getId(),
+                        "role",user.get().getRole()
+
+                )
+        );
     }
 }

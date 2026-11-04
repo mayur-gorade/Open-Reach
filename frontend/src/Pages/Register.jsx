@@ -31,7 +31,11 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("STUDENT");
+  const [role, setRole] = useState("");
+
+  const [collegeName, setCollegeName] = useState("");
+  const [collegeId, setCollegeId] = useState("");
+  const [idCard, setIdCard] = useState(null);
 
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,22 +52,46 @@ export default function Register() {
       return;
     }
 
+    if (!role) {
+        setMessage("Please select your role.");
+        return;
+      }
+
+
+      // Validate student verification details
+      if (role === "STUDENT") {
+        if (!collegeName || !collegeId || !idCard) {
+          setMessage("Please provide all college verification details.");
+          return;
+        }
+      }
+
     setLoading(true);
 
-    const userData = {
-      name,
-      email,
-      password,
-      role,
-    };
+
+    const formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("role", role);
+
+      // Add college details only for students
+      if (role === "STUDENT") {
+        formData.append("collegeName", collegeName);
+        formData.append("collegeId", collegeId);
+        formData.append("idCard", idCard);
+      }
+
 
     try {
       const response = await axios.post(
         "http://localhost:8080/users/register",
-        userData
+        formData
       );
 
       const userId = response.data.userId;
+      const role = response.data.role
 
       if (role === "STUDENT") {
         navigate("/api/student-profiles", {
@@ -97,7 +125,6 @@ export default function Register() {
         alignItems: "center",
         padding: { xs: 2, sm: 3 },
         boxSizing: "border-box",
-
         backgroundImage: `
           linear-gradient(
             rgba(243, 252, 253, 0.12),
@@ -281,7 +308,7 @@ export default function Register() {
           sx={{ ...inputStyle, mt: 2 }}
           slotProps={{
               input:{
-            startAdornment: (
+              startAdornment: (
               <InputAdornment position="start">
                 <LockOutlinedIcon sx={{ color: "#607782" }} />
               </InputAdornment>
@@ -310,12 +337,12 @@ export default function Register() {
         <Typography
           sx={{
             color: "#0B1F2A",
-            fontWeight: 600,
+            fontWeight: 550,
             mt: 2.5,
             mb: 1,
           }}
         >
-          I want to join as
+          Register as :
         </Typography>
 
         <RadioGroup
@@ -377,6 +404,60 @@ export default function Register() {
             }
           />
         </RadioGroup>
+
+        {role === "STUDENT" && (
+          <Box sx={{ mt: 2 }}>
+
+            <TextField
+              fullWidth
+              required
+              label="College Name"
+              placeholder="Enter your college name"
+              value={collegeName}
+              onChange={(e) => setCollegeName(e.target.value)}
+              sx={inputStyle}
+            />
+
+            <TextField
+              fullWidth
+              required
+              label="College ID"
+              placeholder="Enter your college ID"
+              value={collegeId}
+              onChange={(e) => setCollegeId(e.target.value)}
+              sx={{ ...inputStyle, mt: 2 }}
+            />
+
+            <Button
+              component="label"
+              variant="outlined"
+              fullWidth
+              sx={{ mt: 2, py: 1.5, borderRadius: "12px" }}
+            >
+              Upload College ID Card
+
+              <input
+                type="file"
+                hidden
+                accept="image/png,image/jpeg,application/pdf"
+                onChange={(e) => {
+                  setIdCard(e.target.files[0] || null);
+                }}
+              />
+            </Button>
+
+            { idCard && (
+              <Typography sx={{ mt: 1, fontSize: 13 }}>
+                Selected File: {idCard.name}
+              </Typography>
+            )}
+
+          </Box>
+        )}
+
+
+
+
 
         {/* Error message */}
         {message && (

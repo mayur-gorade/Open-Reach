@@ -17,7 +17,7 @@ public class StudentProfileService {
         this.studentProfileRepo=studentProfileRepo;
     }
 
-    public Optional<StudentProfile> getProfileByUser(int userId) {
+    public Optional<StudentProfile> getProfileByUserId(int userId) {
         return studentProfileRepo.findByUserId(userId);
     }
 

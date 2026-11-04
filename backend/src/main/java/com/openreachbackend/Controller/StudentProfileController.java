@@ -20,7 +20,7 @@ public class StudentProfileController {
 
      @GetMapping("/{userId}")
      public ResponseEntity<StudentProfile> getProfile(@PathVariable int userId){
-         Optional<StudentProfile> profile =  studentProfileservice.getProfileByUser(userId);
+         Optional<StudentProfile> profile =  studentProfileservice.getProfileByUserId(userId);
 
          if(profile.isPresent()){
              return ResponseEntity.ok(profile.get());

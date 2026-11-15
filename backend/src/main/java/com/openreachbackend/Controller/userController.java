@@ -52,6 +52,7 @@ public class userController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginReq){
+        System.out.println("LOGIN CONTROLLER REACHED");
         return userservice.loginUser(loginReq);
 
     }

@@ -5,8 +5,12 @@ import com.openreachbackend.Model.StudentVerification;
 import com.openreachbackend.Model.User;
 import com.openreachbackend.Repository.StudentVerificationRepository;
 import com.openreachbackend.Repository.userRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,17 +19,22 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.apache.logging.log4j.ThreadContext.isEmpty;
+
 @Service
 public class userService {
-
+    private final PasswordEncoder passwordEncoder;
    private final userRepository userRepo;
    private final StudentVerificationRepository studentVerificationRepository;
    private final FileStorageService fileStorageService;
+   private final AuthenticationManager authenticationManager;
 
-    public userService(userRepository userRepo, StudentVerificationRepository studentVerificationRepository, FileStorageService fileStorageService) {
+    public userService(PasswordEncoder passwordEncoder, userRepository userRepo, StudentVerificationRepository studentVerificationRepository, FileStorageService fileStorageService, AuthenticationManager authenticationManager) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.studentVerificationRepository = studentVerificationRepository;
         this.fileStorageService = fileStorageService;
+        this.authenticationManager = authenticationManager;
     }
 
 
@@ -40,27 +49,6 @@ public class userService {
             MultipartFile idCard
     ) throws IOException {
 
-        //Creating the object user
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(role);
-
-
-
-        if(userRepo.existsByEmail(user.getEmail())){
-           return ResponseEntity.status(409).body(Map.of("message","User already exists"));
-       }
-
-        // Check whether the role is valid
-        if (!role.equalsIgnoreCase("STUDENT") &&
-                !role.equalsIgnoreCase("CLIENT")) {
-
-            return ResponseEntity.badRequest()
-                    .body(Map.of("message", "Invalid role"));
-        }
-
         // Validate student details
         if (role.equalsIgnoreCase("STUDENT")) {
 
@@ -73,6 +61,33 @@ public class userService {
                                 "College name, college ID and ID card are required"));
             }
         }
+
+
+        // Check whether the role is valid
+        if (!role.equalsIgnoreCase("STUDENT") &&
+                !role.equalsIgnoreCase("CLIENT")) {
+
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Invalid role"));
+        }
+
+
+        //Creating the object user
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(role);
+
+
+
+        if(userRepo.existsByEmail(user.getEmail())){
+           return ResponseEntity.status(409).body(Map.of("message","User already exists"));
+       }
+
+
+
+
          String filePath = null;
          User savedUser;
         try {
@@ -115,27 +130,47 @@ public class userService {
        ));
     }
 
-
+    @Transactional
     public ResponseEntity<?> loginUser(LoginRequest loginReq) {
         Optional<User> user = userRepo.findByEmail(loginReq.getEmail());
+
         if(user.isEmpty()){
-            return ResponseEntity.status(404).body("Email not registered");
-
+            return  ResponseEntity.status(404).body(Map.of("message","Email not registered"));
         }
 
-        if(!user.get().getPassword().equals(loginReq.getPassword())){
-            return ResponseEntity.status(401).body("Invalid password");
+        try{
+            //Create authentication request
+            Authentication authenticationRequest =
+                    new UsernamePasswordAuthenticationToken(
+                           loginReq.getEmail(),
+                            loginReq.getPassword()
+            );
+
+            //Ask Spring Security to authenticate the user
+            Authentication authentication =
+                     authenticationManager.authenticate(authenticationRequest);
+
+            //Authentication succeeded
+            // Fetch our application User to get its database ID and role.
+            User existingUser = user.get();
+
+
+            //Return login response
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message", "Login successful",
+                            "userId", existingUser.getId(),
+                            "role", existingUser.getRole()
+                    )
+            );
+        }catch (AuthenticationException e) {
+
+             //Email exists but password is incorrect
+
+            return ResponseEntity.status(401).body(Map.of("message","Incorrect password"));
+
         }
-
-
-
-        return ResponseEntity.ok(
-                Map.of(
-                        "message","login successfull",
-                        "userId",user.get().getId(),
-                        "role",user.get().getRole()
-
-                )
-        );
     }
+
+//
 }

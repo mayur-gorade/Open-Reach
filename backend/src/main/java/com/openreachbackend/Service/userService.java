@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.apache.logging.log4j.ThreadContext.isEmpty;
+
 
 @Service
 public class userService {
@@ -28,13 +28,16 @@ public class userService {
    private final StudentVerificationRepository studentVerificationRepository;
    private final FileStorageService fileStorageService;
    private final AuthenticationManager authenticationManager;
+   private final JwtService jwtService;
 
-    public userService(PasswordEncoder passwordEncoder, userRepository userRepo, StudentVerificationRepository studentVerificationRepository, FileStorageService fileStorageService, AuthenticationManager authenticationManager) {
+    public userService(PasswordEncoder passwordEncoder, userRepository userRepo, StudentVerificationRepository studentVerificationRepository, FileStorageService fileStorageService, AuthenticationManager authenticationManager, JwtService jwtService, JwtService jwtService1) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.studentVerificationRepository = studentVerificationRepository;
         this.fileStorageService = fileStorageService;
         this.authenticationManager = authenticationManager;
+
+        this.jwtService = jwtService;
     }
 
 
@@ -154,13 +157,21 @@ public class userService {
             // Fetch our application User to get its database ID and role.
             User existingUser = user.get();
 
+            //generating token after authentication is successful
+           String token =jwtService.generateToken(
+                    existingUser.getEmail(),
+                    existingUser.getId(),
+                    existingUser.getRole()
+            );
+
 
             //Return login response
             return ResponseEntity.ok(
                     Map.of(
                             "message", "Login successful",
                             "userId", existingUser.getId(),
-                            "role", existingUser.getRole()
+                            "role", existingUser.getRole(),
+                            "token",token
                     )
             );
         }catch (AuthenticationException e) {

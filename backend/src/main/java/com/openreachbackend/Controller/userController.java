@@ -2,6 +2,7 @@ package com.openreachbackend.Controller;
 
 import com.openreachbackend.Model.LoginRequest;
 import com.openreachbackend.Model.User;
+import com.openreachbackend.Service.JwtService;
 import com.openreachbackend.Service.userService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ public class userController {
     private final userService userservice;
 
 
-    public userController(userService userservice) {
+    public userController(userService userservice, JwtService jwtService) {
         this.userservice = userservice;
     }
 

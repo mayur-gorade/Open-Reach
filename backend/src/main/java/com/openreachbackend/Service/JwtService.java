@@ -1,5 +1,6 @@
 package com.openreachbackend.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -28,6 +29,14 @@ public class JwtService {
                 .expiration(expirationDate)
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public Claims extractAllClaims(String token){
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     private SecretKey getSigningKey (){

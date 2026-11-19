@@ -9,5 +9,4 @@ public class OpenreachbackendApplication {
 
 		SpringApplication.run(OpenreachbackendApplication.class, args);
 	}
-
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api"
 import {
   Box,
   Button,
@@ -37,19 +38,19 @@ export default function Login() {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/users/login",
+      const response = await api.post(
+         "/users/login",
         loginData
       );
 
       const userId = response.data.userId;
       const role = response.data.role;
+      const token = response.data.token;
+      localStorage.setItem("token",token);
 
       if (role === "STUDENT") {
         try {
-          await axios.get(
-            `http://localhost:8080/api/student-profiles/${userId}`
-          );
+          await api.get(`/api/student-profiles/${userId}`);
 
           // Student profile already exists.
           navigate("/");

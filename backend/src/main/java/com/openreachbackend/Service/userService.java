@@ -52,6 +52,12 @@ public class userService {
             MultipartFile idCard
     ) throws IOException {
 
+        if(role==null || role.isBlank()){
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "Role is required"));
+        }
+        role = role.trim().toUpperCase();
+
         // Validate student details
         if (role.equalsIgnoreCase("STUDENT")) {
 

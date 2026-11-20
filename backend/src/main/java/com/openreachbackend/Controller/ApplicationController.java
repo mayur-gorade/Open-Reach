@@ -18,8 +18,8 @@ public class ApplicationController {
     }
 
     @PostMapping("/apply")
-    public ResponseEntity<Application>applyForJob(@RequestBody  Application appication){
-        Application savedApplication = Applicationservice.applyForJob(appication);
+    public ResponseEntity<Application>applyForJob(@RequestBody  Application application){
+        Application savedApplication = Applicationservice.applyForJob(application);
 
         return ResponseEntity.ok(savedApplication);
     }

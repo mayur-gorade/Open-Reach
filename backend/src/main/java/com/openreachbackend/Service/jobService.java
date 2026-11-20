@@ -37,7 +37,6 @@ public class jobService {
 
         exsitingJob.setTitle(updatedjob.getTitle());
         exsitingJob.setDescription(updatedjob.getDescription());exsitingJob.setSkills(updatedjob.getSkills());
-        exsitingJob.setExperience(updatedjob.getExperience());
         exsitingJob.setCategory(updatedjob.getCategory());
         exsitingJob.setJobType(updatedjob.getJobType());
         exsitingJob.setBudget(updatedjob.getBudget());

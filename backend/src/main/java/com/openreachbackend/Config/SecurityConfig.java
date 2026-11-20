@@ -64,11 +64,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                             //public endpoint
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/users/login",
                                 "/users/register"
                         ).permitAll()
+                        .requestMatchers(HttpMethod.GET ,"/jobs/**").permitAll()
+
+                          //student-only endpoint
+                        .requestMatchers("/api/student-profiles/**").hasRole("STUDENT")
+                        .requestMatchers(HttpMethod.POST ,"/application/apply").hasRole("STUDENT")
+
+                        // Client-only endpoints
+                        .requestMatchers(HttpMethod.POST, "/jobs/addjob").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.PUT, "/jobs/job/**").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.DELETE, "/jobs/job/**").hasRole("CLIENT")
+
+
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .anyRequest().authenticated()
                 ).exceptionHandling(exception ->

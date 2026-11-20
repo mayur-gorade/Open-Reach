@@ -14,7 +14,6 @@ public class JobPost {
     private String title;
     private String description;
     private String skills;
-    private String experience;
     private String category;
     private String jobType;
     private double budget;
@@ -49,14 +48,6 @@ public class JobPost {
 
     public void setSkills(String skills) {
         this.skills = skills;
-    }
-
-    public String getExperience() {
-        return experience;
-    }
-
-    public void setExperience(String experience) {
-        this.experience = experience;
     }
 
     public String getCategory() {

@@ -1,4 +1,6 @@
 package com.openreachbackend.Model;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +19,10 @@ public class JobPost {
     private String category;
     private String jobType;
     private double budget;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
     public int getId() {
         return id;
@@ -72,5 +78,13 @@ public class JobPost {
 
     public void setBudget(double budget) {
         this.budget = budget;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

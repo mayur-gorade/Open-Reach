@@ -1,8 +1,13 @@
 package com.openreachbackend.Service;
 
 import com.openreachbackend.Model.StudentProfile;
+import com.openreachbackend.Model.User;
 import com.openreachbackend.Repository.StudentProfileRepository;
+import com.openreachbackend.Repository.userRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,7 +32,6 @@ public class StudentProfileService {
         if(exist){
            throw new IllegalStateException("profile already exist");
         }
-
         return studentProfileRepo.save(profile);
     }
 

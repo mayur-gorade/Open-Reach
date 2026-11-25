@@ -1,5 +1,7 @@
 import { useState } from "react";
 import api from "../api"
+import{useContext} from "react";
+import{AuthContext} from "../context/AuthContext";
 import {
   Box,
   Button,
@@ -19,6 +21,8 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Login() {
+
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -46,11 +50,13 @@ export default function Login() {
       const userId = response.data.userId;
       const role = response.data.role;
       const token = response.data.token;
-      localStorage.setItem("token",token);
+
+      auth.login(token, role);
+
 
       if (role === "STUDENT") {
         try {
-          await api.get(`/api/student-profiles/${userId}`);
+          await api.get(`/api/student-profiles/me`);
 
           // Student profile already exists.
           navigate("/");

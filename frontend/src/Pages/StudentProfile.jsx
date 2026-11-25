@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api";
 
 import {
     Box,
@@ -67,8 +67,8 @@ function StudentProfile() {
         };
 
         try {
-            const response = await axios.post(
-                "http://localhost:8080/api/student-profiles",
+            const response = await api.post(
+                "/api/student-profiles",
                 profileData
             );
 

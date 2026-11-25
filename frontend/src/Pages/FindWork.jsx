@@ -1,6 +1,7 @@
 import { useParams ,useNavigate} from "react-router-dom";
 import {useEffect , useState } from "react";
 import axios from "axios";
+import api from "../api"
 import {
     Box,
     Button,
@@ -13,7 +14,7 @@ export default function FindWork(){
     const navigate = useNavigate();
     const [jobs , setJobs]= useState([]);
     useEffect(() => {
-            axios.get("http://localhost:8080/jobs/findjob")
+            axios.get("/jobs/findjob")
                 .then((response) => {
                     setJobs(response.data);
                 })

@@ -1,6 +1,7 @@
 
 import { useState } from "react";
-
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -14,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
 
+  const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -149,7 +151,28 @@ export default function Navbar() {
         >
 
           {/* Login */}
-          <Button
+          {auth.token?(
+              <Button
+                  variant="contained"
+                  onClick={()=>{
+                       auth.logout();
+                       navigate("/");
+                      }}
+                   sx={{
+                       color: "#0B1F2A",
+                        backgroundColor: "#00AFC1",
+                        borderRadius: "12px",
+                       textTransform: "none",
+                       minWidth: "auto",
+                       px: { xs: 1, sm: 2 },
+                      }}
+                  >
+                  Logout
+              </Button>
+
+             ):
+
+           (<Button
             onClick={() => handleNavigation("/login")}
             sx={{
               color: "#0B1F2A",
@@ -160,7 +183,8 @@ export default function Navbar() {
           >
             Log In
           </Button>
-
+         )
+        }
 
           {/* Signup */}
           <Button

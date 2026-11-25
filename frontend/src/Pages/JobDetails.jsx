@@ -1,6 +1,7 @@
 import{useState,useEffect} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import api from "../api"
 import {
     Box,
     Button,
@@ -15,7 +16,7 @@ export default function JobDetails(){
     const {id} = useParams();
     const [job , setJobDetails]=useState("");
     useEffect(()=>{
-           axios.get(`http://localhost:8080/jobs/job/${id}`)
+           api.get(`/jobs/job/${id}`)
                .then((response)=>{
                    console.log("JOB:", response.data);
                     setJobDetails(response.data)

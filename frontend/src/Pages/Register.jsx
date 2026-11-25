@@ -1,4 +1,5 @@
 import { useState } from "react";
+import api from "../api"
 
 import {
   Box,
@@ -85,9 +86,9 @@ export default function Register() {
 
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/users/register",
-        formData
+      const response = await api.post(
+              "/users/register",
+              formData
       );
 
       const userId = response.data.userId;
